@@ -1,0 +1,31 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5001:80"  # 5001 у вашего хоста, 80 внутри контейнера, как для 'listen' в Nginx
+    depends_on:
+      - db
+    environment:
+      FLASK_APP: srv_sql
+      FLASK_ENV: development
+      DB_HOST: db
+      DB_USER: user
+      DB_PASS: user
+      DB_NAME: db_srv_sql
+      DB_PORT: 3306
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: db_srv_sql
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
